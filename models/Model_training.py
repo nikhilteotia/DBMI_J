@@ -2,11 +2,17 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, BaggingClassifier
 import joblib
 from sklearn.naive_bayes import GaussianNB
+from sklearn.mixture import GaussianMixture
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.linear_model import LogisticRegressionCV
+from sklearn.ensemble import AdaBoostClassifier
 
-with open('clean_final.csv') as f:
+with open('models\clean_final.csv') as f:
     X_clean = pd.read_csv(f)
 print(X_clean[:-2])
 
@@ -19,11 +25,15 @@ print(X)
 y = X_clean['target']
 X_scaled = preprocessing.scale(X)
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y.values, test_size=0.4, random_state=0)
-
 clfs = {'GradientBoosting': GradientBoostingClassifier(max_depth=6, n_estimators=100, max_features=0.3),
         'LogisticRegression': LogisticRegression(),
         'GaussianNB': GaussianNB(),
-        'RandomForestClassifier': RandomForestClassifier(n_estimators=10)
+        'RandomForestClassifier': RandomForestClassifier(n_estimators=10),
+        'GaussianMixture': GaussianMixture(n_components=2, random_state=0).fit(X),
+        'DecisionTreeClassifier': DecisionTreeClassifier(random_state=0),
+        'BernoulliNB': BernoulliNB(),
+        'LogisticRegressionCV':LogisticRegressionCV(),
+        ' AdaBoostClassifier': AdaBoostClassifier(n_estimators=100, random_state=0)
         }
 cols = ['model', 'matthews_corrcoef', 'roc_auc_score', 'precision_score', 'recall_score', 'f1_score']
 models_report = pd.DataFrame(columns=cols)

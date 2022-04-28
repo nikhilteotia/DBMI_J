@@ -1,12 +1,24 @@
+from tkinter.tix import DirTree, Tree
 import joblib
 import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn import metrics
+from sklearn import tree
+from sklearn import mixture
+from sklearn.mixture import GaussianMixture
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from sklearn.metrics import accuracy_score, f1_score
+from sklearn.naive_bayes import GaussianNB
+from sklearn.mixture import GaussianMixture
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.linear_model import LogisticRegressionCV
+from sklearn.ensemble import AdaBoostClassifier
 
-with open(r'C:\Users\joybh\OneDrive\Documents\GitHub\P2P_Lending\src\clean_final.csv')as f:
+
+with open(r'C:\Users\Joy\Documents\GitHub\DBMI_J\models\clean_final.csv')as f:
     X_clean=pd.read_csv(f)
 cat_features = ['term','amt_difference', 'grade', 'home_ownership', 'verification_status', 'purpose', 'delinq_2yrs_cat', 'inq_last_6mths_cat', 'pub_rec_cat', 'initial_list_status']
 Array = X_clean.to_numpy()
@@ -14,22 +26,36 @@ X=Array[:,:19]
 y = X_clean['target']
 X_scaled = preprocessing.scale(X)
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y.values, test_size=0.4, random_state=0)
-with open(r'C:\Users\joybh\OneDrive\Documents\GitHub\P2P_Lending\models\FinalGradientBoosting.joblib','rb')as f:
-    gradient=joblib.load(f)
-with open(r'C:\Users\joybh\OneDrive\Documents\GitHub\P2P_Lending\models\FinalLogisticRegression.joblib','rb')as f:
-    logistic=joblib.load(f)
-with open(r'C:\Users\joybh\OneDrive\Documents\GitHub\P2P_Lending\models\FinalRandomForestClassifier.joblib','rb')as f:
-    random=joblib.load(f)
-with open(r'C:\Users\joybh\OneDrive\Documents\GitHub\P2P_Lending\models\Finaladaboost.joblib','rb')as f:
+with open(r'C:\Users\Joy\Documents\GitHub\DBMI_J\Final AdaBoostClassifier.joblib','rb')as f:
     adaboost=joblib.load(f)
-with open(r'C:\Users\joybh\OneDrive\Documents\GitHub\P2P_Lending\models\FinalGaussianNB.joblib','rb')as f:
+with open(r'C:\Users\Joy\Documents\GitHub\DBMI_J\FinalBernoulliNB.joblib','rb')as f:
+    bernaulli=joblib.load(f)
+with open(r'C:\Users\Joy\Documents\Github\DBMI_J\FinalDecisionTreeClassifier.joblib','rb')as f:
+    dtree=joblib.load(f)
+with open(r'C:\Users\Joy\Documents\Github\DBMI_J\FinalGaussianMixture.joblib','rb')as f:
+    gaussianmix=joblib.load(f)
+with open(r'C:\Users\Joy\Documents\Github\DBMI_J\FinalGaussianNB.joblib','rb')as f:
     gaussian=joblib.load(f)
+with open(r'C:\Users\Joy\Documents\GitHub\DBMI_J\FinalGradientBoosting.joblib','rb')as f:
+    gradiant=joblib.load(f)
+with open(r'C:\Users\Joy\Documents\GitHub\DBMI_J\FinalLogisticRegression.joblib','rb')as f:
+    logistic=joblib.load(f)
+with open(r'C:\Users\Joy\Documents\GitHub\DBMI_J\FinalLogisticRegressionCV.joblib','rb')as f:
+    logisticcv=joblib.load(f)
+with open(r'C:\Users\Joy\Documents\Github\DBMI_J\FinalRandomForestClassifier.joblib','rb')as f:
+    forest=joblib.load(f)
+
     
-clfs = {'GradientBoosting': gradient,
+clfs = {'GradientBoosting': gradiant,
         'LogisticRegression': logistic,
-        'RandomForestClassifier': random,
+        'RandomForestClassifier': forest,
         'gaussianNB':gaussian,
-        'adaboost' :adaboost
+        'adaboost' :adaboost,
+        'GaussianMixture': gaussianmix,
+        'DecisionTreeClassifier': dtree,
+        'BernoulliNB': bernaulli,
+        'LogisticRegressionCV':logisticcv
+
         }
 cols = ['model', 'matthews_corrcoef', 'roc_auc_score', 'precision_score', 'recall_score', 'f1_score']
 model_type='Non-Balanced'
@@ -75,3 +101,8 @@ print(conf_matrix['GradientBoosting'])
 print(conf_matrix['gaussianNB'])
 
 print(conf_matrix['adaboost'])
+
+print(conf_matrix['GaussianMixture'])
+print(conf_matrix['DecisionTreeClassifier'])
+print(conf_matrix['BernoulliNB'])
+print(conf_matrix['LogisticRegressionCV'])
